@@ -1,24 +1,22 @@
-package org.tinyj.lava.rex;
+package org.tinyj.lava;
 
 import org.testng.annotations.Test;
-import org.tinyj.lava.throwing.*;
-import org.tinyj.lava.utils.Throwing;
 
 import java.util.Objects;
 import java.util.function.*;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Mockito.*;
-import static org.tinyj.lava.rex.MockProxy.mockProxy;
+import static org.tinyj.lava.MockProxy.mockProxy;
+import static org.tinyj.lava.Rex.rex;
 
 public class RexTest {
-
   @Test
   public void unchecked_exception_from_runnable_falls_through() throws Exception {
     final Exception originalException = new RuntimeException();
 
     try {
-      Rex.run(Throwing.runnable(() -> raise(originalException))).run();
+      rex(LavaFun.runnable(() -> raise(originalException))).run();
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -30,7 +28,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      Rex.accept(Throwing.consumer(x -> raise(originalException))).accept("x");
+      rex(LavaFun.consumer(x -> raise(originalException))).accept("x");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -42,7 +40,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      Rex.accept(Throwing.biConsumer((x, y) -> raise(originalException))).accept("x", "y");
+      rex(LavaFun.biConsumer((x, y) -> raise(originalException))).accept("x", "y");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -54,7 +52,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      Rex.get(Throwing.supplier(() -> raise(originalException))).get();
+      rex(LavaFun.supplier(() -> raise(originalException))).get();
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -66,7 +64,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      Rex.apply(Throwing.function(x -> raise(originalException))).apply("x");
+      rex(LavaFun.function(x -> raise(originalException))).apply("x");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -78,7 +76,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      Rex.apply(Throwing.biFunction((x, y) -> raise(originalException))).apply("x", "y");
+      rex(LavaFun.biFunction((x, y) -> raise(originalException))).apply("x", "y");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -90,7 +88,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      Rex.test(Throwing.predicate(x -> raise(originalException))).test("x");
+      rex(LavaFun.predicate(x -> raise(originalException))).test("x");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -102,7 +100,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      Rex.test(Throwing.biPredicate((x, y) -> raise(originalException))).test("x", "y");
+      rex(LavaFun.biPredicate((x, y) -> raise(originalException))).test("x", "y");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -114,7 +112,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      Rex.run(Throwing.runnable(() -> raise(originalException))).run();
+      rex(LavaFun.runnable(() -> raise(originalException))).run();
 
     } catch (Exception e) {
       assertThat(e)
@@ -128,7 +126,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      Rex.accept(Throwing.consumer(x -> raise(originalException))).accept("x");
+      rex(LavaFun.consumer(x -> raise(originalException))).accept("x");
 
     } catch (Exception e) {
       assertThat(e)
@@ -142,7 +140,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      Rex.accept(Throwing.biConsumer((x, y) -> raise(originalException))).accept("x", "y");
+      rex(LavaFun.biConsumer((x, y) -> raise(originalException))).accept("x", "y");
 
     } catch (Exception e) {
       assertThat(e)
@@ -156,7 +154,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      Rex.get(Throwing.supplier(() -> raise(originalException))).get();
+      rex(LavaFun.supplier(() -> raise(originalException))).get();
 
     } catch (Exception e) {
       assertThat(e)
@@ -170,7 +168,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      Rex.apply(Throwing.function(x -> raise(originalException))).apply("x");
+      rex(LavaFun.function(x -> raise(originalException))).apply("x");
 
     } catch (Exception e) {
       assertThat(e)
@@ -184,7 +182,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      Rex.apply(Throwing.biFunction((x, y) -> raise(originalException))).apply("x", "y");
+      rex(LavaFun.biFunction((x, y) -> raise(originalException))).apply("x", "y");
 
     } catch (Exception e) {
       assertThat(e)
@@ -198,7 +196,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      Rex.test(Throwing.predicate(x -> raise(originalException))).test("x");
+      rex(LavaFun.predicate(x -> raise(originalException))).test("x");
 
     } catch (Exception e) {
       assertThat(e)
@@ -212,7 +210,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      Rex.test(Throwing.biPredicate((x, y) -> raise(originalException))).test("x", "y");
+      rex(LavaFun.biPredicate((x, y) -> raise(originalException))).test("x", "y");
 
     } catch (Exception e) {
       assertThat(e)
@@ -223,43 +221,44 @@ public class RexTest {
 
   @Test
   public void on_invocation_runnable_is_invoked() throws Exception {
-    final ThrowingRunnable<?> runnable = mock(ThrowingRunnable.class);
-    final Runnable rexRunnable = Rex.run(runnable);
+    final LavaRunnable<?> runnable = mock(LavaRunnable.class);
+    final Runnable rexRunnable = rex(runnable);
     verifyZeroInteractions(runnable);
 
     rexRunnable.run();
 
-    verify(runnable).run();
+    verify(runnable).checkedRun();
   }
 
   @Test
   public void on_invocation_consumer_is_invoked() throws Exception {
     @SuppressWarnings("unchecked")
-    final ThrowingConsumer<String, ?> consumer = mock(ThrowingConsumer.class);
-    final Consumer<String> rexConsumer = Rex.accept(consumer);
+    final LavaConsumer<String, ?> consumer = mock(LavaConsumer.class);
+    final Consumer<String> rexConsumer = rex(consumer);
     verifyZeroInteractions(consumer);
 
     rexConsumer.accept("x");
 
-    verify(consumer).accept("x");
+    verify(consumer).checkedAccept("x");
   }
 
   @Test
   public void on_invocation_biConsumer_is_invoked() throws Exception {
     @SuppressWarnings("unchecked")
-    final ThrowingBiConsumer<String, String, ?> biConsumer = mock(ThrowingBiConsumer.class);
-    final BiConsumer<String, String> rexBiConsumer = Rex.accept(biConsumer);
+    final LavaBiConsumer<String, String, ?> biConsumer = mock(LavaBiConsumer.class);
+    final BiConsumer<String, String> rexBiConsumer = rex(biConsumer);
     verifyZeroInteractions(biConsumer);
 
     rexBiConsumer.accept("x", "y");
 
-    verify(biConsumer).accept("x", "y");
+    verify(biConsumer).checkedAccept("x", "y");
   }
 
   @Test
   public void on_invocation_supplier_is_invoked() throws Exception {
-    final ThrowingSupplier<?, ?> supplier = mockProxy(ThrowingSupplier.class, () -> "x");
-    final Supplier<?> rexSupplier = Rex.get(supplier);
+    @SuppressWarnings("unchecked")
+    final LavaSupplier<String, ?> supplier = mockProxy(LavaSupplier.class, () -> "x");
+    final Supplier<?> rexSupplier = rex(supplier);
     verifyZeroInteractions(supplier);
 
     final Object result = rexSupplier.get();
@@ -270,8 +269,8 @@ public class RexTest {
   @Test
   public void on_invocation_function_is_invoked() throws Exception {
     @SuppressWarnings("unchecked")
-    final ThrowingFunction<String, ?, ?> function = mockProxy(ThrowingFunction.class, x -> x);
-    final Function<String, ?> rexFunction = Rex.apply(function);
+    final LavaFunction<String, String, ?> function = mockProxy(LavaFunction.class, x -> x);
+    final Function<String, ?> rexFunction = rex(function);
     verifyZeroInteractions(function);
 
     final Object result = rexFunction.apply("x");
@@ -282,8 +281,8 @@ public class RexTest {
   @Test
   public void on_invocation_biFunction_is_invoked() throws Exception {
     @SuppressWarnings("unchecked")
-    final ThrowingBiFunction<String, String, ?, ?> biFunction = mockProxy(ThrowingBiFunction.class, (x, y) -> x.toString() + y);
-    final BiFunction<String, String, ?> rexBiFunction = Rex.apply(biFunction);
+    final LavaBiFunction<String, String, String, ?> biFunction = mockProxy(LavaBiFunction.class, (x, y) -> x.toString() + y);
+    final BiFunction<String, String, ?> rexBiFunction = rex(biFunction);
     verifyZeroInteractions(biFunction);
 
     final Object result = rexBiFunction.apply("x", "y");
@@ -294,8 +293,8 @@ public class RexTest {
   @Test
   public void on_invocation_predicate_is_invoked() throws Exception {
     @SuppressWarnings("unchecked")
-    final ThrowingPredicate<String, ?> predicate = mockProxy(ThrowingPredicate.class, x -> Objects.equals(x, "x"));
-    final Predicate<String> rexPredicate = Rex.test(predicate);
+    final LavaPredicate<String, ?> predicate = mockProxy(LavaPredicate.class, x -> Objects.equals(x, "x"));
+    final Predicate<String> rexPredicate = rex(predicate);
     verifyZeroInteractions(predicate);
 
     final boolean result = rexPredicate.test("x");
@@ -306,8 +305,8 @@ public class RexTest {
   @Test
   public void on_invocation_biPredicate_is_invoked() throws Exception {
     @SuppressWarnings("unchecked")
-    final ThrowingBiPredicate<String, String, ?> biPredicate = mockProxy(ThrowingBiPredicate.class, Objects::equals);
-    final BiPredicate<String, String> rexBiPredicate = Rex.test(biPredicate);
+    final LavaBiPredicate<String, String, ?> biPredicate = mockProxy(LavaBiPredicate.class, Objects::equals);
+    final BiPredicate<String, String> rexBiPredicate = rex(biPredicate);
     verifyZeroInteractions(biPredicate);
 
     final boolean result = rexBiPredicate.test("x", "x");

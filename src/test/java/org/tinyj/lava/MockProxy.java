@@ -1,4 +1,4 @@
-package org.tinyj.lava.rex;
+package org.tinyj.lava;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -9,10 +9,6 @@ public class MockProxy {
 
   static <T> T mockProxy(Class<T> aClass, T proxied) {
     return mock(aClass, new ProxyAnswer<>(proxied));
-  }
-
-  static <T> Answer proxy(T proxied) {
-    return new ProxyAnswer<>(proxied);
   }
 
   private static class ProxyAnswer<T> implements Answer {
