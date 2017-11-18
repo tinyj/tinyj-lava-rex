@@ -2,19 +2,20 @@ package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaRunnable;
 import org.tinyj.lava.Rex;
+import org.tinyj.lava.WrappedCheckedException;
 
 /**
- * A runnable task. This interface bridges
- * [LavaRunnable](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavarunnablee)
- * and
- * [Runnable](https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html)
- * by wrapping checked exceptions raised during invocation of `run(...)` into a
- * [WrappedCheckedException](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#wrappedcheckedexception).
- *
+ * A runnable task.
+ * <p>
+ * This interface bridges {@link LavaRunnable} and {@link Runnable} by
+ * wrapping checked exceptions raised during invocation of {@link #run}
+ * into a {@link WrappedCheckedException}.
+ * <p>
  * Usually invoking a runnable results in side effects. Subsequent
  * invocations may or may not result in further side effects.
- *
- * This is a functional interface whose functional method is `checkedRun()`.
+ * <p>
+ * This is a functional interface whose functional method is
+ * {@link #checkedRun}.
  *
  * @param <E> upper limit of thrown exception types
  */
@@ -26,8 +27,8 @@ public interface RexRunnable<E extends Exception>
   /**
    * Execute the task, wrap checked Exceptions.
    *
-   * @throws RuntimeException Checked exception raised during invocation will be wrapped in a
-   * [WrappedCheckedException](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#wrappedcheckedexception).
+   * @throws RuntimeException Checked exception raised during invocation will be
+   *     wrapped in a {@link WrappedCheckedException}.
    */
   @Override
   default void run() {
@@ -35,11 +36,12 @@ public interface RexRunnable<E extends Exception>
   }
 
   /**
-   * Safely casts between different (#RexRunnable) parametrization
+   * Safely casts between different {@link RexRunnable} parametrization
    *
    * @param <E> required exception limit
    * @param runnable runnable to adopt
-   * @return `runnable` casted to the compatible parametrization (#RexRunnable)`<E>`
+   * @return {@code runnable} casted to the compatible parametrization
+   *     {@link RexRunnable}{@code <E>}
    */
   @SuppressWarnings("unchecked")
   static <E extends Exception>

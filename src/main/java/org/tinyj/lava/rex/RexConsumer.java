@@ -2,21 +2,22 @@ package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaConsumer;
 import org.tinyj.lava.Rex;
+import org.tinyj.lava.WrappedCheckedException;
 
 import java.util.function.Consumer;
 
 /**
- * An operation on an input value. This interface bridges
- * [LavaConsumer](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavaconsumerx-e)
- * and
- * [Consumer](https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html)
- * by wrapping checked exceptions raised during invocation of `accept(...)` into a
- * [WrappedCheckedException](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#wrappedcheckedexception).
- *
+ * An operation on an input value.
+ * <p>
+ * This interface bridges {@link LavaConsumer} and {@link Consumer} by
+ * wrapping checked exceptions raised during invocation of {@link #accept}
+ * into a {@link WrappedCheckedException}.
+ * <p>
  * Usually invoking a consumer results in side effects. Subsequent
  * invocations may or may not result in further side effects.
- *
- * This is a functional interface whose functional method is `checkedAccept(X)`.
+ * <p>
+ * This is a functional interface whose functional method is
+ * {@link #checkedAccept}
  *
  * @param <X> consumed value type
  * @param <E> upper limit of thrown exception types
@@ -31,7 +32,7 @@ public interface RexConsumer<X, E extends Exception>
    *
    * @param x consumed value
    * @throws RuntimeException Checked exception raised during invocation will be wrapped in a
-   * [WrappedCheckedException](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#wrappedcheckedexception).
+   *     {@link WrappedCheckedException}.
    */
   @Override
   default void accept(X x) {
@@ -39,12 +40,13 @@ public interface RexConsumer<X, E extends Exception>
   }
 
   /**
-   * Safely casts between different (#RexConsumer) parametrization
+   * Safely casts between different {@link RexConsumer} parametrization
    *
    * @param <X> accepted input type
    * @param <E> required exception limit
    * @param consumer consumer to adopt
-   * @return `consumer` casted to the compatible parametrization (#RexConsumer)`<X, E>`
+   * @return {@code consumer} casted to the compatible parametrization
+   *     {@link RexConsumer}{@code <X, E>}
    */
   @SuppressWarnings("unchecked")
   static <X, E extends Exception>

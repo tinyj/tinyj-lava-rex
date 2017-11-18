@@ -2,21 +2,22 @@ package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaBiConsumer;
 import org.tinyj.lava.Rex;
+import org.tinyj.lava.WrappedCheckedException;
 
 import java.util.function.BiConsumer;
 
 /**
- * An operation on two input values. This interface bridges
- * [LavaBiConsumer](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavabiconsumerx-y-e)
- * and
- * [BiConsumer](https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html)
- * by wrapping checked exceptions raised during invocation of `accept(...)` into a
- * [WrappedCheckedException](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#wrappedcheckedexception).
- *
+ * An operation on two input values.
+ * <p>
+ * This interface bridges {@link LavaBiConsumer} and {@link BiConsumer} by
+ * wrapping checked exceptions raised during invocation of {@link #accept}
+ * into a {@link WrappedCheckedException}.
+ * <p>
  * Usually invoking a bi-consumer results in side effects. Subsequent
  * invocations may or may not result in further side effects.
- *
- * This is a functional interface whose functional method is `checkedAccept(X, Y)`.
+ * <p>
+ * This is a functional interface whose functional method is
+ * {@link #checkedAccept}.
  *
  * @param <X> first consumed value type
  * @param <Y> second consumed value type
@@ -31,8 +32,8 @@ public interface RexBiConsumer<X, Y, E extends Exception>
    *
    * @param x first consumed value
    * @param y second consumed value
-   * @throws RuntimeException Checked exception raised during invocation will be wrapped in a
-   * [WrappedCheckedException](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#wrappedcheckedexception).
+   * @throws RuntimeException Checked exception raised during invocation will be
+   *     wrapped in a {@link WrappedCheckedException}.
    */
   @Override
   default void accept(X x, Y y) {
@@ -40,13 +41,14 @@ public interface RexBiConsumer<X, Y, E extends Exception>
   }
 
   /**
-   * Safely casts between different (#RexBiConsumer) parametrization
+   * Safely casts between different {@link RexBiConsumer} parametrization
    *
    * @param <X> first accepted input type
    * @param <Y> second accepted input type
    * @param <E> required exception limit
    * @param biConsumer bi-consumer to adopt
-   * @return `biConsumer` casted to the compatible parametrization (#RexBiConsumer)`<X, Y, E>`
+   * @return {@code biConsumer} casted to the compatible parametrization
+   *     {@link RexBiConsumer}{@code <X, Y, E>}
    */
   @SuppressWarnings("unchecked")
   static <X, Y, E extends Exception>

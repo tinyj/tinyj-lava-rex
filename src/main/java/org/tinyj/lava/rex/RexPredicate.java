@@ -2,23 +2,22 @@ package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaPredicate;
 import org.tinyj.lava.Rex;
+import org.tinyj.lava.WrappedCheckedException;
 
 import java.util.function.Predicate;
 
 /**
- * A special kind of function mapping its argument to
- * a {@code boolean} result.
- * This interface bridges
- * [LavaPredicate](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavapredicatex-e)
- * and
- * [Predicate](https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html)
- * by wrapping checked exceptions raised during invocation of `test(...)` into a
- * [WrappedCheckedException](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#wrappedcheckedexception).
- *
+ * A special kind of function mapping its argument to a {@code boolean} result.
+ * <p>
+ * This interface bridges {@link LavaPredicate} and {@link Predicate} by
+ * wrapping checked exceptions raised during invocation of {@link #test}
+ * into a {@link WrappedCheckedException}.
+ * <p>
  * While not strictly required it usually is expected that subsequent
  * invocations with the same argument yield equal results.
- *
- * This is a functional interface whose functional method is {@link #checkedTest(X)}.
+ * <p>
+ * This is a functional interface whose functional method is
+ * {@link #checkedTest}.
  *
  * @param <X> the function's argument type
  * @param <E> upper limit of thrown exception types
@@ -31,9 +30,9 @@ public interface RexPredicate<X, E extends Exception>
    * Test if the argument matches the predicate, wrap checked Exceptions.
    *
    * @param x argument to the match
-   * @return `true` if `x` matches, `false` otherwise
-   * @throws RuntimeException Checked exception raised during invocation will be wrapped in a
-   * [WrappedCheckedException](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#wrappedcheckedexception).
+   * @return {@code true} if {@code x} matches, {@code false} otherwise
+   * @throws RuntimeException Checked exception raised during invocation will be
+   *     wrapped in a {@link WrappedCheckedException}.
    */
   @Override
   default boolean test(X x) {
@@ -41,12 +40,13 @@ public interface RexPredicate<X, E extends Exception>
   }
 
   /**
-   * Safely casts between different (#RexPredicate) parametrization
+   * Safely casts between different {@link RexPredicate} parametrization
    *
    * @param <X> accepted argument type
    * @param <E> required exception limit
    * @param predicate predicate to adopt
-   * @return `predicate` casted to the compatible parametrization (#RexPredicate)`<X, E>`
+   * @return {@code predicate} casted to the compatible parametrization
+   *     {@link RexPredicate}{@code <X, E>}
    */
   @SuppressWarnings("unchecked")
   static <X, E extends Exception>

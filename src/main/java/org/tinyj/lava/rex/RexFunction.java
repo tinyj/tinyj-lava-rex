@@ -2,21 +2,22 @@ package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaFunction;
 import org.tinyj.lava.Rex;
+import org.tinyj.lava.WrappedCheckedException;
 
 import java.util.function.Function;
 
 /**
- * A function maps its argument to a result. This interface bridges
- * [LavaFunction](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavafunctionx-r-e)
- * and
- * [Function](https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html)
- * by wrapping checked exceptions raised during invocation of `apply(...)` into a
- * [WrappedCheckedException](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#wrappedcheckedexception).
- *
+ * A function maps its argument to a result.
+ * <p>
+ * This interface bridges {@link LavaFunction} and {@link Function} by
+ * wrapping checked exceptions raised during invocation of {@link #apply}
+ * into a {@link WrappedCheckedException}.
+ * <p>
  * While not strictly required it usually is expected that subsequent
  * invocations with the same argument yield equal results.
- *
- * This is a functional interface whose functional method is `checkedApply(X)`.
+ * <p>
+ * This is a functional interface whose functional method is
+ * {@link #checkedApply}.
  *
  * @param <X> the function's argument type
  * @param <R> the function's result type
@@ -31,8 +32,8 @@ public interface RexFunction<X, R, E extends Exception>
    *
    * @param x argument to map
    * @return the function's result
-   * @throws RuntimeException Checked exception raised during invocation will be wrapped in a
-   * [WrappedCheckedException](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#wrappedcheckedexception).
+   * @throws RuntimeException Checked exception raised during invocation will be
+   *     wrapped in a {@link WrappedCheckedException}.
    */
   @Override
   default R apply(X x) {
@@ -40,13 +41,14 @@ public interface RexFunction<X, R, E extends Exception>
   }
 
   /**
-   * Safely casts between different (#RexFunction) parametrization
+   * Safely casts between different {@link RexFunction} parametrization
    *
    * @param <X> accepted argument type
    * @param <R> required result type
    * @param <E> required exception limit
    * @param function function to adopt
-   * @return `function` casted to the compatible parametrization (#RexFunction)`<X, R, E>`
+   * @return {@code function} casted to the compatible parametrization
+   *     {@link RexFunction}{@code <X, R, E>}
    */
   @SuppressWarnings("unchecked")
   static <X, R, E extends Exception>

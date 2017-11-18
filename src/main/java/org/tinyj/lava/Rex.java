@@ -12,186 +12,274 @@ import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
 public class Rex {
 
   /**
-   * This method simplifies the creation of (#RexRunnable) lambdas in places where a
-   * [Runnable](https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html) is
-   * is expected. E.g. `new Thread(Rex.runnable(() -> {...code throwing checked exception...}))`
+   * Do not instantiate
+   */
+  protected Rex() { assert false : "Rex is a utility class, static use only."; }
+
+  /**
+   * This method simplifies the creation of {@link RexRunnable} lambdas in
+   * places where a {@link Runnable} is expected or disambiguation between
+   * {@link RexSupplier} and {@link RexRunnable} is required.
+   * <p>
+   * E.g. {@code new Thread(Rex.runnable(() -> {...code throwing checked exception...}))}
    *
-   * @return `runnable`
+   * @param <E> upper exception limit
+   * @param runnable lambda
+   * @return {@code runnable}
    */
-  public static Runnable
-  runnable(RexRunnable runnable) { return runnable; }
+  public static <E extends Exception> RexRunnable<E>
+  runnable(RexRunnable<? extends E> runnable) { return RexRunnable.castDown(runnable); }
 
   /**
-   * This method simplifies the creation of (#RexSupplier) lambdas in places where a
-   * [Supplier](https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html)
-   * is expected. E.g. `Stream.generate(Rex.supplier(() -> {...code throwing checked exception...}))`
+   * This method simplifies the creation of {@link RexSupplier} lambdas in
+   * places where a {@link Supplier} is expected or disambiguation between
+   * {@link RexSupplier} and {@link RexRunnable} is required.
+   * <p>
+   * E.g. {@code Stream.generate(Rex.supplier(() -> {...code throwing checked exception...}))}
    *
-   * @return `supplier`
+   * @param <R> return type
+   * @param <E> upper exception limit
+   * @param supplier lambda
+   * @return {@code supplier}
    */
-  public static <R> Supplier<R>
-  supplier(RexSupplier<R, ?> supplier) { return supplier; }
+  public static <R, E extends Exception> RexSupplier<R, E>
+  supplier(RexSupplier<? extends R, ? extends E> supplier) { return RexSupplier.castDown(supplier); }
 
   /**
-   * This method simplifies the creation of (#RexFunction) lambdas in places where a
-   * [Function](https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html)
-   * is expected. E.g. `Stream.map(Rex.function(element -> {...code throwing checked exception...}))`
+   * This method simplifies the creation of {@link RexFunction} lambdas in
+   * places where a {@link Function} is expected or a disambiguation between
+   * {@link RexFunction} and {@link RexConsumer} is required.
+   * <p>
+   * E.g. {@code Stream.map(Rex.function(element -> {...code throwing checked exception...}))}
    *
-   * @return `function`
+   * @param <X> parameter type
+   * @param <R> return type
+   * @param <E> upper exception limit
+   * @param function lambda
+   * @return {@code function}
    */
-  public static <X, R> Function<X, R>
-  function(RexFunction<X, R, ?> function) { return function; }
+  public static <X, R, E extends Exception> RexFunction<X, R, E>
+  function(RexFunction<? super X, ? extends R, ? extends E> function) { return RexFunction.castDown(function); }
 
   /**
-   * This method simplifies the creation of (#RexBiFunction) lambdas in places where a
-   * [BiFunction](https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html)
-   * is expected. E.g. `map.replaceAll(Rex.biFunction((key, value) -> {...code throwing checked exception...}))`
+   * This method simplifies the creation of {@link RexBiFunction} lambdas in
+   * places where a {@link BiFunction} is expected or a disambiguation between
+   * {@link RexBiFunction} and {@link RexBiConsumer} is required.
+   * <p>
+   * E.g. {@code map.replaceAll(Rex.biFunction((key, value) -> {...code throwing checked exception...}))}
    *
-   * @return `biFunction`
+   * @param <X> first parameter type
+   * @param <Y> second parameter type
+   * @param <R> return type
+   * @param <E> upper exception limit
+   * @param biFunction lambda
+   * @return {@code biFunction}
    */
-  public static <X, Y, R> BiFunction<X, Y, R>
-  biFunction(RexBiFunction<X, Y, R, ?> biFunction) { return biFunction; }
+  public static <X, Y, R, E extends Exception> RexBiFunction<X, Y, R, E>
+  biFunction(RexBiFunction<? super X, ? super Y, ? extends R, ? extends E> biFunction) { return RexBiFunction.castDown(biFunction); }
 
   /**
-   * This method simplifies the creation of (#RexConsumer) lambdas in places where a
-   * [Consumer](https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html)
-   * is expected. E.g. `stream.forEach(Rex.consumer(element -> {...code throwing checked exception...}))`
+   * This method simplifies the creation of {@link RexConsumer} lambdas in
+   * places where a {@link Consumer} is expected or a disambiguation between
+   * {@link RexFunction} and {@link RexConsumer} is required.
+   * <p>
+   * E.g. {@code stream.forEach(Rex.consumer(element -> {...code throwing checked exception...}))}
    *
-   * @return `consumer`
+   * @param <X> parameter type
+   * @param <E> upper exception limit
+   * @param consumer lambda
+   * @return {@code consumer}
    */
-  public static <X> Consumer<X>
-  consumer(RexConsumer<X, ?> consumer) { return consumer; }
+  public static <X, E extends Exception> RexConsumer<X, E>
+  consumer(RexConsumer<? super X, ? extends E> consumer) { return RexConsumer.castDown(consumer); }
 
   /**
-   * This method simplifies the creation of (#RexBiConsumer) lambdas in places where a
-   * [BiConsumer](https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html)
-   * is expected. E.g. `map.forEach(Rex.biConsumer((key, value) -> {...code throwing checked exception...}))`
+   * This method simplifies the creation of {@link RexBiConsumer} lambdas in
+   * places where a {@link BiConsumer} is expected or a disambiguation between
+   * {@link RexBiFunction} and {@link RexBiConsumer} is required.
+   * <p>
+   * E.g. {@code map.forEach(Rex.biConsumer((key, value) -> {...code throwing checked exception...}))}
    *
-   * @return `biConsumer`
+   * @param <X> first parameter type
+   * @param <Y> second parameter type
+   * @param <E> upper exception limit
+   * @param biConsumer lambda
+   * @return {@code biConsumer}
    */
-  public static <X, Y> BiConsumer<X, Y>
-  biConsumer(RexBiConsumer<X, Y, ?> biConsumer) { return biConsumer; }
+  public static <X, Y, E extends Exception> RexBiConsumer<X, Y, E>
+  biConsumer(RexBiConsumer<? super X, ? super Y, ? extends E> biConsumer) { return RexBiConsumer.castDown(biConsumer); }
 
   /**
-   * This method simplifies the creation of (#RexPredicate) lambdas in places where a
-   * [Predicate](https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html)
-   * is expected. E.g. `stream.filter(Rex.predicate(element -> {...code throwing checked exception...}))`
+   * This method simplifies the creation of {@link RexPredicate} lambdas in
+   * places where a {@link Predicate} is expected or a disambiguation between
+   * {@link RexFunction} and {@link RexPredicate} is required.
+   * <p>
+   * E.g. {@code stream.filter(Rex.predicate(element -> {...code throwing checked exception...}))}
    *
-   * @return `predicate`
+   * @param <X> parameter type
+   * @param <E> upper exception limit
+   * @param predicate lambda
+   * @return {@code predicate}
    */
-  public static <X> Predicate<X>
-  predicate(RexPredicate<X, ?> predicate) { return predicate; }
+  public static <X, E extends Exception> RexPredicate<X, E>
+  predicate(RexPredicate<? super X, ? extends E> predicate) { return RexPredicate.castDown(predicate); }
 
   /**
-   * This method simplifies the creation of (#RexBiPredicate) lambdas in places where a
-   * [BiPredicate](https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html)
-   * is expected. E.g. `Files.find(start, depth, Rex.biPredicate((path, attributes) -> {...code throwing checked exception...}))`
+   * This method simplifies the creation of {@link RexBiPredicate} lambdas in
+   * places where a {@link BiPredicate} is expected or a disambiguation between
+   * {@link RexFunction} and {@link RexBiPredicate} is required.
+   * <p>
+   * E.g. {@code Files.find(start, depth, Rex.biPredicate((path, attributes) -> {...code throwing checked exception...}))}
    *
-   * @return `biPredicate`
+   * @param <X> first parameter type
+   * @param <Y> second parameter type
+   * @param <E> upper exception limit
+   * @param biPredicate lambda
+   * @return {@code biPredicate}
    */
-  public static <X, Y> BiPredicate<X, Y>
-  biPredicate(RexBiPredicate<X, Y, ?> biPredicate) { return biPredicate; }
+  public static <X, Y, E extends Exception> RexBiPredicate<X, Y, E>
+  biPredicate(RexBiPredicate<? super X, ? super Y, ? extends E> biPredicate) { return RexBiPredicate.castDown(biPredicate); }
 
   /**
-   * This method is equivalent to `Rex.function(operator)`.
+   * This method is equivalent to {@code function(operator)}.
+   *
+   * @param <X> parameter type
+   * @param <E> upper exception limit
+   * @param operator lambda
+   * @return {@code operator}
    */
-  public static <X> Function<X, X>
-  unaryOp(RexFunction<X, X, ?> operator) { return operator; }
+  public static <X, E extends Exception> RexFunction<X, X, E>
+  unaryOp(RexFunction<? super X, ? extends X, ? extends E> operator) { return RexFunction.castDown(operator); }
 
   /**
-   * This method is equivalent to `Rex.biFunction(operator)`.
+   * This method is equivalent to {@code biFunction(operator)}.
+   *
+   * @param <X> parameter type
+   * @param <E> upper exception limit
+   * @param operator lambda
+   * @return {@code operator}
    */
-  public static <X> BiFunction<X, X, X>
-  binaryOp(RexBiFunction<X, X, X, ?> operator) { return operator; }
+  public static <X, E extends Exception> RexBiFunction<X, X, X, E>
+  binaryOp(RexBiFunction<? super X, ? super X, ? extends X, ? extends E> operator) { return RexBiFunction.castDown(operator); }
 
   /**
-   * This method is equivalent to `Rex.biPredicate(relation)`.
+   * This method is equivalent to {@code biPredicate(relation)}.
+   *
+   * @param <X> parameter type
+   * @param <E> upper exception limit
+   * @param relation lambda
+   * @return {@code operator}
    */
-  public static <X> BiPredicate<X, X>
-  relation(RexBiPredicate<X, X, ?> relation) { return relation; }
+  public static <X, E extends Exception> RexBiPredicate<X, X, E>
+  relation(RexBiPredicate<? super X, ? super X, ? extends E> relation) { return RexBiPredicate.castDown(relation); }
 
   /**
-   * Bridge [LavaRunnable](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavarunnablee)
-   * to [Runnable](https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html)
-   * by wrapping checked exceptions raised.
+   * Bridge {@link LavaRunnable} to {@link Runnable} by wrapping checked
+   * exceptions raised.
+   *
+   * @param <E> upper exception limit
+   * @param checked {@link LavaRunnable} to wrap
+   * @return {@link RexRunnable} wrapping {@code checked}
    */
-  public static Runnable
-  rex(LavaRunnable<?> checked) {
-    return (RexRunnable) checked::checkedRun;
-  }
+  public static <E extends Exception> RexRunnable<E>
+  rex(LavaRunnable<? extends E> checked) { return RexRunnable.castDown(checked::checkedRun); }
 
   /**
-   * Bridge [LavaConsumer](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavaconsumerx-e)
-   * to [Consumer](https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html)
-   * by wrapping checked exceptions raised.
+   * Bridge {@link LavaConsumer} to {@link Consumer} by wrapping checked
+   * exceptions raised.
+   *
+   * @param <X> parameter type
+   * @param <E> upper exception limit
+   * @param checked {@link LavaConsumer} to wrap
+   * @return {@link RexConsumer} wrapping {@code checked}
    */
-  public static <X> Consumer<X>
-  rex(LavaConsumer<X, ?> checked) {
-    return (RexConsumer<X, ?>) checked::checkedAccept;
-  }
+  public static <X, E extends Exception> RexConsumer<X, E>
+  rex(LavaConsumer<? super X, ? extends E> checked) { return RexConsumer.castDown(checked::checkedAccept); }
 
   /**
-   * Bridge [LavaBiConsumer](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavabiconsumerx-y-e)
-   * to [BiConsumer](https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html)
-   * by wrapping checked exceptions raised.
+   * Bridge {@link LavaBiConsumer} to {@link BiConsumer} by wrapping checked
+   * exceptions raised.
+   *
+   * @param <X> first parameter type
+   * @param <Y> second parameter type
+   * @param <E> upper exception limit
+   * @param checked {@link LavaBiConsumer} to wrap
+   * @return {@link RexBiConsumer} wrapping {@code checked}
    */
-  public static <X, Y> BiConsumer<X, Y>
-  rex(LavaBiConsumer<X, Y, ?> checked) {
-    return (RexBiConsumer<X, Y, ?>) checked::checkedAccept;
-  }
+  public static <X, Y, E extends Exception> RexBiConsumer<X, Y, E>
+  rex(LavaBiConsumer<? super X, ? super Y, ? extends E> checked) { return RexBiConsumer.castDown(checked::checkedAccept); }
 
   /**
-   * Bridge [LavaSupplier](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavasupplierr-e)
-   * to [Supplier](https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html)
-   * by wrapping checked exceptions raised.
+   * Bridge {@link LavaSupplier} to {@link Supplier} by wrapping checked
+   * exceptions raised.
+   *
+   * @param <R> return type
+   * @param <E> upper exception limit
+   * @param checked {@link LavaSupplier} to wrap
+   * @return {@link RexSupplier} wrapping {@code checked}
    */
-  public static <R> Supplier<R>
-  rex(LavaSupplier<R, ?> checked) {
-    return (RexSupplier<R, ?>) checked::checkedGet;
-  }
+  public static <R, E extends Exception> RexSupplier<R, E>
+  rex(LavaSupplier<? extends R, ? extends E> checked) { return RexSupplier.castDown(checked::checkedGet); }
 
   /**
-   * Bridge [LavaFunction](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavafunctionx-r-e)
-   * to [Function](https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html)
-   * by wrapping checked exceptions raised.
+   * Bridge {@link LavaFunction} to {@link Function} by wrapping checked
+   * exceptions raised.
+   *
+   * @param <X> parameter type
+   * @param <R> return type
+   * @param <E> upper exception limit
+   * @param checked {@link LavaFunction} to wrap
+   * @return {@link RexFunction} wrapping {@code checked}
    */
-  public static <X, R> Function<X, R>
-  rex(LavaFunction<X, R, ?> checked) {
-    return (RexFunction<X, R, ?>) checked::checkedApply;
-  }
+  public static <X, R, E extends Exception> RexFunction<X, R, E>
+  rex(LavaFunction<? super X, ? extends R, ? extends E> checked) { return RexFunction.castDown(checked::checkedApply); }
 
   /**
-   * Bridge [LavaBiFunction](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavabifunctionx-y-r-e)
-   * to [BiFunction](https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html)
-   * by wrapping checked exceptions raised.
+   * Bridge {@link LavaBiFunction} to {@link BiFunction} by wrapping checked
+   * exceptions raised.
+   *
+   * @param <X> first parameter type
+   * @param <Y> second parameter type
+   * @param <R> return type
+   * @param <E> upper exception limit
+   * @param checked {@link LavaBiFunction} to wrap
+   * @return {@link RexBiFunction} wrapping {@code checked}
    */
-  public static <X, Y, R> BiFunction<X, Y, R>
-  rex(LavaBiFunction<X, Y, R, ?> checked) {
-    return (RexBiFunction<X, Y, R, ?>) checked::checkedApply;
-  }
+  public static <X, Y, R, E extends Exception> RexBiFunction<X, Y, R, E>
+  rex(LavaBiFunction<? super X, ? super Y, ? extends R, ? extends E> checked) { return RexBiFunction.castDown(checked::checkedApply); }
 
   /**
-   * Bridge [LavaPredicate](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavapredicatex-e)
-   * to [Predicate](https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html)
-   * by wrapping checked exceptions raised.
+   * Bridge {@link LavaPredicate} to {@link Predicate} by wrapping checked
+   * exceptions raised.
+   *
+   * @param <X> parameter type
+   * @param <E> upper exception limit
+   * @param checked {@link LavaPredicate} to wrap
+   * @return {@link RexPredicate} wrapping {@code checked}
    */
-  public static <X> Predicate<X>
-  rex(LavaPredicate<X, ?> checked) {
-    return (RexPredicate<X, ?>) checked::checkedTest;
-  }
+  public static <X, E extends Exception> RexPredicate<X, E>
+  rex(LavaPredicate<? super X, ? extends E> checked) { return RexPredicate.castDown(checked::checkedTest); }
 
   /**
-   * Bridge [LavaBiPredicate](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavabipredicatex-y-e)
-   * to [BiPredicate](https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html)
-   * by wrapping checked exceptions raised.
+   * Bridge {@link LavaBiPredicate} to {@link BiPredicate} by wrapping checked
+   * exceptions raised.
+   *
+   * @param <X> first parameter type
+   * @param <Y> second parameter type
+   * @param <E> upper exception limit
+   * @param checked {@link LavaConsumer} to wrap
+   * @return {@link RexConsumer} wrapping {@code checked}
    */
-  public static <X, Y> BiPredicate<X, Y>
-  rex(LavaBiPredicate<X, Y, ?> checked) {
-    return (RexBiPredicate<X, Y, ?>) checked::checkedTest;
-  }
+  public static <X, Y, E extends Exception> RexBiPredicate<X, Y, E>
+  rex(LavaBiPredicate<? super X, ? super Y, ? extends E> checked) { return RexBiPredicate.castDown(checked::checkedTest); }
 
   /**
-   * Convenience method invoking [LavaRunnable](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavarunnablee)
-   * wrapping checked exceptions raised.
+   * Convenience method invoking {@link LavaRunnable} wrapping checked
+   * exceptions raised.
+   * <p>
+   * Equivalent to {@code rex(checked).run()}
+   *
+   * @param checked {@link LavaRunnable} to invoke
    */
   public static void
   invoke(LavaRunnable<?> checked) {
@@ -199,8 +287,14 @@ public class Rex {
   }
 
   /**
-   * Convenience method invoking [LavaConsumer](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavaconsumerx-e)
-   * wrapping checked exceptions raised.
+   * Convenience method invoking {@link LavaConsumer} wrapping checked
+   * exceptions raised.
+   * <p>
+   * Equivalent to {@code rex(checked).accept(x)}
+   *
+   * @param <X> parameter type
+   * @param checked {@link LavaConsumer} to invoke
+   * @param x parameter to {@code checked}
    */
   public static <X> void
   invoke(LavaConsumer<X, ?> checked, X x) {
@@ -208,8 +302,16 @@ public class Rex {
   }
 
   /**
-   * Convenience method invoking [LavaBiConsumer](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavabiconsumerx-y-e)
-   * wrapping checked exceptions raised.
+   * Convenience method invoking {@link LavaBiConsumer} wrapping checked
+   * exceptions raised.
+   * <p>
+   * Equivalent to {@code rex(checked).accept(x, y)}
+   *
+   * @param <X> first parameter type
+   * @param <Y> second parameter type
+   * @param checked {@link LavaBiConsumer} to invoke
+   * @param x first parameter to {@code checked}
+   * @param y second parameter to {@code checked}
    */
   public static <X, Y> void
   invoke(LavaBiConsumer<X, Y, ?> checked, X x, Y y) {
@@ -217,8 +319,14 @@ public class Rex {
   }
 
   /**
-   * Convenience method invoking [LavaSupplier](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavasupplierr-e)
-   * wrapping checked exceptions raised.
+   * Convenience method invoking {@link LavaSupplier} wrapping checked
+   * exceptions raised.
+   * <p>
+   * Equivalent to {@code rex(checked).get()}
+   *
+   * @param <R> return type
+   * @param checked {@link LavaSupplier} to invoke
+   * @return result of invoking {@code checked}
    */
   public static <R> R
   invoke(LavaSupplier<R, ?> checked) {
@@ -226,8 +334,16 @@ public class Rex {
   }
 
   /**
-   * Convenience method invoking [LavaFunction](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavafunctionx-r-e)
-   * wrapping checked exceptions raised.
+   * Convenience method invoking {@link LavaFunction} wrapping checked
+   * exceptions raised.
+   * <p>
+   * Equivalent to {@code rex(checked).apply(x)}
+   *
+   * @param <X> parameter type
+   * @param <R> return type
+   * @param checked {@link LavaFunction} to invoke
+   * @param x parameter to {@code checked}
+   * @return result of invoking {@code checked}
    */
   public static <X, R> R
   invoke(LavaFunction<X, R, ?> checked, X x) {
@@ -235,17 +351,34 @@ public class Rex {
   }
 
   /**
-   * Convenience method invoking [LavaBiFunction](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavabifunctionx-y-r-e)
-   * wrapping checked exceptions raised.
+   * Convenience method invoking {@link LavaBiFunction} wrapping checked
+   * exceptions raised.
+   * <p>
+   * Equivalent to {@code rex(checked).apply(x, y)}
+   *
+   * @param <X> first parameter type
+   * @param <Y> second parameter type
+   * @param <R> return type
+   * @param checked {@link LavaBiFunction} to invoke
+   * @param x first parameter to {@code checked}
+   * @param y second parameter to {@code checked}
+   * @return result of invoking {@code checked}
    */
-  public static <X, Y, R, E extends Exception> R
-  invoke(LavaBiFunction<X, Y, R, E> checked, X x, Y y) {
+  public static <X, Y, R> R
+  invoke(LavaBiFunction<X, Y, R, ?> checked, X x, Y y) {
     return wrapCheckedException(() -> checked.checkedApply(x, y));
   }
 
   /**
-   * Convenience method invoking [LavaPredicate](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavapredicatex-e)
-   * wrapping checked exceptions raised.
+   * Convenience method invoking {@link LavaPredicate} wrapping checked
+   * exceptions raised.
+   * <p>
+   * Equivalent to {@code rex(checked).apply(x)}
+   *
+   * @param <X> parameter type
+   * @param checked {@link LavaPredicate} to invoke
+   * @param x first parameter to {@code checked}
+   * @return result of invoking {@code checked}
    */
   public static <X> boolean
   invoke(LavaPredicate<X, ?> checked, X x) {
@@ -253,8 +386,17 @@ public class Rex {
   }
 
   /**
-   * Convenience method invoking [LavaBiPredicate](https://github.com/tinyj/tinyj-lava-api/blob/master/APIdoc.md#lavabipredicatex-y-e)
-   * wrapping checked exceptions raised.
+   * Convenience method invoking {@link LavaBiPredicate} wrapping checked
+   * exceptions raised.
+   * <p>
+   * Equivalent to {@code rex(checked).apply(x, y)}
+   *
+   * @param <X> first parameter type
+   * @param <Y> second parameter type
+   * @param checked {@link LavaBiPredicate} to invoke
+   * @param x first parameter to {@code checked}
+   * @param y second parameter to {@code checked}
+   * @return result of invoking {@code checked}
    */
   public static <X, Y> boolean
   invoke(LavaBiPredicate<X, Y, ?> checked, X x, Y y) {
