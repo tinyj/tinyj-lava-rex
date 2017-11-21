@@ -1,10 +1,11 @@
 package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaConsumer;
-import org.tinyj.lava.Rex;
 import org.tinyj.lava.WrappedCheckedException;
 
 import java.util.function.Consumer;
+
+import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
 
 /**
  * An operation on an input value.
@@ -36,7 +37,11 @@ public interface RexConsumer<X, E extends Exception>
    */
   @Override
   default void accept(X x) {
-    Rex.invoke(this, x);
+    try {
+      checkedAccept(x);
+    } catch (Exception e) {
+      throw wrapCheckedException(e);
+    }
   }
 
   /**

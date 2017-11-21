@@ -1,6 +1,6 @@
-package org.tinyj.lava;
+package org.tinyj.lava.rex;
 
-import org.tinyj.lava.rex.*;
+import org.tinyj.lava.*;
 
 import java.util.function.*;
 
@@ -249,6 +249,17 @@ public class Rex {
   rex(LavaBiFunction<? super X, ? super Y, ? extends R, ? extends E> checked) { return RexBiFunction.castDown(checked::checkedApply); }
 
   /**
+   * Bridge {@link LavaCondition} to {@link BooleanSupplier} by wrapping checked
+   * exceptions raised.
+   *
+   * @param <E> upper exception limit
+   * @param checked {@link LavaCondition} to wrap
+   * @return {@link RexCondition} wrapping {@code checked}
+   */
+  public static <E extends Exception> RexCondition<E>
+  rex(LavaCondition<? extends E> checked) { return RexCondition.castDown(checked::checkedTest); }
+
+  /**
    * Bridge {@link LavaPredicate} to {@link Predicate} by wrapping checked
    * exceptions raised.
    *
@@ -298,7 +309,7 @@ public class Rex {
    */
   public static <X> void
   invoke(LavaConsumer<X, ?> checked, X x) {
-    wrapCheckedException(() -> checked.checkedAccept(x));
+    rex(checked).accept(x);
   }
 
   /**
@@ -315,7 +326,7 @@ public class Rex {
    */
   public static <X, Y> void
   invoke(LavaBiConsumer<X, Y, ?> checked, X x, Y y) {
-    wrapCheckedException(() -> checked.checkedAccept(x, y));
+    rex(checked).accept(x, y);
   }
 
   /**
@@ -347,7 +358,7 @@ public class Rex {
    */
   public static <X, R> R
   invoke(LavaFunction<X, R, ?> checked, X x) {
-    return wrapCheckedException(() -> checked.checkedApply(x));
+    return rex(checked).apply(x);
   }
 
   /**
@@ -366,7 +377,22 @@ public class Rex {
    */
   public static <X, Y, R> R
   invoke(LavaBiFunction<X, Y, R, ?> checked, X x, Y y) {
-    return wrapCheckedException(() -> checked.checkedApply(x, y));
+    return rex(checked).apply(x, y);
+  }
+
+  /**
+   * Convenience method invoking {@link LavaCondition} wrapping checked
+   * exceptions raised.
+   * <p>
+   * Equivalent to {@code rex(checked).apply(x)}
+   *
+   * @param <X> parameter type
+   * @param checked {@link LavaCondition} to invoke
+   * @return result of invoking {@code checked}
+   */
+  public static <X> boolean
+  invoke(LavaCondition<?> checked) {
+    return rex(checked).getAsBoolean();
   }
 
   /**
@@ -382,7 +408,7 @@ public class Rex {
    */
   public static <X> boolean
   invoke(LavaPredicate<X, ?> checked, X x) {
-    return wrapCheckedException(() -> checked.checkedTest(x));
+    return rex(checked).test(x);
   }
 
   /**
@@ -400,6 +426,6 @@ public class Rex {
    */
   public static <X, Y> boolean
   invoke(LavaBiPredicate<X, Y, ?> checked, X x, Y y) {
-    return wrapCheckedException(() -> checked.checkedTest(x, y));
+    return rex(checked).test(x, y);
   }
 }

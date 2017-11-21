@@ -1,10 +1,11 @@
 package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaBiPredicate;
-import org.tinyj.lava.Rex;
 import org.tinyj.lava.WrappedCheckedException;
 
 import java.util.function.BiPredicate;
+
+import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
 
 /**
  * A special kind of bi-function mapping its arguments to a {@code boolean}.
@@ -37,7 +38,12 @@ public interface RexBiPredicate<X, Y, E extends Exception>
    */
   @Override
   default boolean test(X x, Y y) {
-    return Rex.invoke(this, x, y);
+    try {
+      return checkedTest(x, y);
+    } catch (Exception e) {
+      throw wrapCheckedException(e);
+    }
+
   }
 
   /**

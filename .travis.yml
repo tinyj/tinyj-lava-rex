@@ -1,9 +1,4 @@
 laguage: java
-addons:
-  apt: { packages: [oracle-java8-installer] }
-jdk:
-  - oraclejdk8
-install:
-  - mvn package -P sonatype -D skipTests
-script:
-  - mvn install -P sonatype
+jdk: oraclejdk9
+install: mvn package -P sonatype -D skipTests
+script: mvn -P sonatype verify

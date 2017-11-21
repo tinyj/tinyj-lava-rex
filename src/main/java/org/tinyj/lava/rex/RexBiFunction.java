@@ -1,10 +1,11 @@
 package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaBiFunction;
-import org.tinyj.lava.Rex;
 import org.tinyj.lava.WrappedCheckedException;
 
 import java.util.function.BiFunction;
+
+import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
 
 /**
  * A bi-function maps its two argument to a result.
@@ -39,7 +40,11 @@ public interface RexBiFunction<X, Y, R, E extends Exception>
    */
   @Override
   default R apply(X x, Y y) {
-    return Rex.invoke(this, x, y);
+    try {
+      return checkedApply(x, y);
+    } catch (Exception e) {
+      throw wrapCheckedException(e);
+    }
   }
 
   /**

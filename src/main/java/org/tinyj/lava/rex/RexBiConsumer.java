@@ -1,10 +1,11 @@
 package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaBiConsumer;
-import org.tinyj.lava.Rex;
 import org.tinyj.lava.WrappedCheckedException;
 
 import java.util.function.BiConsumer;
+
+import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
 
 /**
  * An operation on two input values.
@@ -37,7 +38,11 @@ public interface RexBiConsumer<X, Y, E extends Exception>
    */
   @Override
   default void accept(X x, Y y) {
-    Rex.invoke(this, x, y);
+    try {
+      checkedAccept(x, y);
+    } catch (Exception e) {
+      throw wrapCheckedException(e);
+    }
   }
 
   /**

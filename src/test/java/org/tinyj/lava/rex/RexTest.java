@@ -1,22 +1,24 @@
-package org.tinyj.lava;
+package org.tinyj.lava.rex;
 
 import org.testng.annotations.Test;
+import org.tinyj.lava.*;
 
 import java.util.Objects;
 import java.util.function.*;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Mockito.*;
-import static org.tinyj.lava.MockProxy.mockProxy;
-import static org.tinyj.lava.Rex.rex;
+import static org.tinyj.lava.rex.MockProxy.mockProxy;
+import static org.tinyj.lava.rex.Rex.rex;
 
 public class RexTest {
+
   @Test
   public void unchecked_exception_from_runnable_falls_through() throws Exception {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex(LavaFun.runnable(() -> raise(originalException))).run();
+      rex((LavaRunnable) () -> raise(originalException)).run();
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -28,7 +30,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex(LavaFun.consumer(x -> raise(originalException))).accept("x");
+      rex((LavaConsumer) x -> raise(originalException)).accept("x");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -40,7 +42,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex(LavaFun.biConsumer((x, y) -> raise(originalException))).accept("x", "y");
+      rex((LavaBiConsumer) (x, y) -> raise(originalException)).accept("x", "y");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -52,7 +54,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex(LavaFun.supplier(() -> raise(originalException))).get();
+      rex((LavaSupplier) () -> raise(originalException)).get();
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -64,7 +66,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex(LavaFun.function(x -> raise(originalException))).apply("x");
+      rex((LavaFunction) x -> raise(originalException)).apply("x");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -76,7 +78,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex(LavaFun.biFunction((x, y) -> raise(originalException))).apply("x", "y");
+      rex((LavaBiFunction) (x, y) -> raise(originalException)).apply("x", "y");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -88,7 +90,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex(LavaFun.predicate(x -> raise(originalException))).test("x");
+      rex((LavaPredicate) x -> raise(originalException)).test("x");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -100,7 +102,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex(LavaFun.biPredicate((x, y) -> raise(originalException))).test("x", "y");
+      rex((LavaBiPredicate) (x, y) -> raise(originalException)).test("x", "y");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -112,7 +114,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex(LavaFun.runnable(() -> raise(originalException))).run();
+      rex((LavaRunnable) () -> raise(originalException)).run();
 
     } catch (Exception e) {
       assertThat(e)
@@ -126,7 +128,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex(LavaFun.consumer(x -> raise(originalException))).accept("x");
+      rex((LavaConsumer) x -> raise(originalException)).accept("x");
 
     } catch (Exception e) {
       assertThat(e)
@@ -140,7 +142,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex(LavaFun.biConsumer((x, y) -> raise(originalException))).accept("x", "y");
+      rex((LavaBiConsumer) (x, y) -> raise(originalException)).accept("x", "y");
 
     } catch (Exception e) {
       assertThat(e)
@@ -154,7 +156,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex(LavaFun.supplier(() -> raise(originalException))).get();
+      rex((LavaSupplier) () -> raise(originalException)).get();
 
     } catch (Exception e) {
       assertThat(e)
@@ -168,7 +170,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex(LavaFun.function(x -> raise(originalException))).apply("x");
+      rex((LavaFunction) x -> raise(originalException)).apply("x");
 
     } catch (Exception e) {
       assertThat(e)
@@ -182,7 +184,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex(LavaFun.biFunction((x, y) -> raise(originalException))).apply("x", "y");
+      rex((LavaBiFunction) (x, y) -> raise(originalException)).apply("x", "y");
 
     } catch (Exception e) {
       assertThat(e)
@@ -196,7 +198,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex(LavaFun.predicate(x -> raise(originalException))).test("x");
+      rex((LavaPredicate) x -> raise(originalException)).test("x");
 
     } catch (Exception e) {
       assertThat(e)
@@ -210,7 +212,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex(LavaFun.biPredicate((x, y) -> raise(originalException))).test("x", "y");
+      rex((LavaBiPredicate) (x, y) -> raise(originalException)).test("x", "y");
 
     } catch (Exception e) {
       assertThat(e)

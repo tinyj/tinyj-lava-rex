@@ -1,4 +1,4 @@
-package org.tinyj.lava;
+package org.tinyj.lava.rex;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;

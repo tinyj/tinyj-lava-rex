@@ -1,8 +1,9 @@
 package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaRunnable;
-import org.tinyj.lava.Rex;
 import org.tinyj.lava.WrappedCheckedException;
+
+import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
 
 /**
  * A runnable task.
@@ -32,7 +33,7 @@ public interface RexRunnable<E extends Exception>
    */
   @Override
   default void run() {
-    Rex.invoke(this);
+    wrapCheckedException(this);
   }
 
   /**

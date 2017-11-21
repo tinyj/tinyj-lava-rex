@@ -1,11 +1,12 @@
 package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaSupplier;
-import org.tinyj.lava.Rex;
 import org.tinyj.lava.WrappedCheckedException;
 
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
+
+import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
 
 /**
  * A supplier of values.
@@ -36,7 +37,7 @@ public interface RexSupplier<R, E extends Exception>
    */
   @Override
   default R get() {
-    return Rex.invoke(this);
+    return wrapCheckedException(this);
   }
 
   @Override

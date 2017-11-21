@@ -1,10 +1,11 @@
 package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaFunction;
-import org.tinyj.lava.Rex;
 import org.tinyj.lava.WrappedCheckedException;
 
 import java.util.function.Function;
+
+import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
 
 /**
  * A function maps its argument to a result.
@@ -37,7 +38,11 @@ public interface RexFunction<X, R, E extends Exception>
    */
   @Override
   default R apply(X x) {
-    return Rex.invoke(this, x);
+    try {
+      return checkedApply(x);
+    } catch (Exception e) {
+      throw wrapCheckedException(e);
+    }
   }
 
   /**

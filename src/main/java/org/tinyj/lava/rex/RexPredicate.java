@@ -1,10 +1,11 @@
 package org.tinyj.lava.rex;
 
 import org.tinyj.lava.LavaPredicate;
-import org.tinyj.lava.Rex;
 import org.tinyj.lava.WrappedCheckedException;
 
 import java.util.function.Predicate;
+
+import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
 
 /**
  * A special kind of function mapping its argument to a {@code boolean} result.
@@ -36,7 +37,12 @@ public interface RexPredicate<X, E extends Exception>
    */
   @Override
   default boolean test(X x) {
-    return Rex.invoke(this, x);
+    try {
+      return checkedTest(x);
+    } catch (Exception e) {
+      throw wrapCheckedException(e);
+    }
+
   }
 
   /**
