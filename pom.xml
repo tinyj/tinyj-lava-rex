@@ -6,7 +6,7 @@
   <artifactId>lava-rex</artifactId>
   <version>0-SNAPSHOT</version>
 
-  <name>TinyJ Lava-REx</name>
+  <name>TinyJ Lava-Rex</name>
   <description>
     Bridge lava-api's functional interfaces to Java's functional interfaces by wrapping checked exceptions.
   </description>
