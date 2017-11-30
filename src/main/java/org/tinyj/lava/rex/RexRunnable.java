@@ -20,7 +20,6 @@ import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
  *
  * @param <E> upper limit of thrown exception types
  */
-
 @FunctionalInterface
 public interface RexRunnable<E extends Exception>
     extends Runnable, LavaRunnable<E> {

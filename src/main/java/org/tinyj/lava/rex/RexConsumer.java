@@ -23,7 +23,6 @@ import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
  * @param <X> consumed value type
  * @param <E> upper limit of thrown exception types
  */
-
 @FunctionalInterface
 public interface RexConsumer<X, E extends Exception>
     extends Consumer<X>, LavaConsumer<X, E> {
