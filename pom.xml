@@ -10,9 +10,9 @@
   <description>
     Bridge lava-api's functional interfaces to Java's functional interfaces by wrapping checked exceptions.
   </description>
-  <url>https://github.com/tinyj/tinyj-lava-api</url>
+  <url>https://github.com/tinyj/tinyj-lava-rex</url>
   <scm>
-    <url>https://github.com/tinyj/tinyj-lava-api</url>
+    <url>https://github.com/tinyj/tinyj-lava-rex</url>
   </scm>
   <licenses>
     <license>
