@@ -3,7 +3,6 @@ package org.tinyj.lava.rex;
 import org.tinyj.lava.LavaSupplier;
 import org.tinyj.lava.WrappedCheckedException;
 
-import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
 import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
@@ -26,7 +25,7 @@ import static org.tinyj.lava.WrappedCheckedException.wrapCheckedException;
  */
 @FunctionalInterface
 public interface RexSupplier<R, E extends Exception>
-    extends Supplier<R>, Callable<R>, LavaSupplier<R, E> {
+    extends Supplier<R>, LavaSupplier<R, E> {
 
   /**
    * Produce a value, wrap checked Exceptions.
@@ -38,11 +37,6 @@ public interface RexSupplier<R, E extends Exception>
   @Override
   default R get() {
     return wrapCheckedException(this);
-  }
-
-  @Override
-  default R call() throws Exception {
-    return checkedGet();
   }
 
   /**
