@@ -86,11 +86,23 @@ public class RexTest {
   }
 
   @Test
+  public void unchecked_exception_from_condition_falls_through() throws Exception {
+    final Exception originalException = new RuntimeException();
+
+    try {
+      rex(condition(() -> { throw originalException; })).getAsBoolean();
+
+    } catch (Exception e) {
+      assertThat(e).isSameAs(originalException);
+    }
+  }
+
+  @Test
   public void unchecked_exception_from_predicate_falls_through() throws Exception {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex(predicate(x -> raise(originalException))).test("x");
+      rex(predicate(x -> { throw originalException; })).test("x");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -102,7 +114,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex(biPredicate((x, y) -> raise(originalException))).test("x", "y");
+      rex(biPredicate((x, y) -> { throw originalException; })).test("x", "y");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -194,11 +206,25 @@ public class RexTest {
   }
 
   @Test
+  public void checked_exception_from_condition_is_wrapped_into_unchecked_exception() throws Exception {
+    final Exception originalException = new Exception();
+
+    try {
+      rex(condition(() -> { throw originalException; })).getAsBoolean();
+
+    } catch (Exception e) {
+      assertThat(e)
+          .isInstanceOf(WrappedCheckedException.class)
+          .hasCause(originalException);
+    }
+  }
+
+  @Test
   public void checked_exception_from_predicate_is_wrapped_into_unchecked_exception() throws Exception {
     final Exception originalException = new Exception();
 
     try {
-      rex(predicate(x -> raise(originalException))).test("x");
+      rex(predicate(x -> { throw originalException; })).test("x");
 
     } catch (Exception e) {
       assertThat(e)
@@ -212,7 +238,7 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex(biPredicate((x, y) -> raise(originalException))).test("x", "y");
+      rex(biPredicate((x, y) -> { throw originalException; })).test("x", "y");
 
     } catch (Exception e) {
       assertThat(e)
@@ -290,6 +316,19 @@ public class RexTest {
     final Object result = rexBiFunction.apply("x", "y");
 
     assertThat(result).isEqualTo("xy");
+  }
+
+  @Test
+  public void on_invocation_condition_is_invoked() throws Exception {
+    @SuppressWarnings("unchecked")
+    final LavaCondition<?> condition = mockProxy(LavaCondition.class, () -> true);
+    final BooleanSupplier rexCondition = rex(condition);
+    verifyZeroInteractions(condition);
+
+    final boolean result = rexCondition.getAsBoolean();
+
+    assertThat(result).isTrue();
+    verify(condition).checkedTest();
   }
 
   @Test
