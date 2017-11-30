@@ -10,6 +10,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Mockito.*;
 import static org.tinyj.lava.rex.MockProxy.mockProxy;
 import static org.tinyj.lava.rex.Rex.rex;
+import static org.tinyj.lava.utils.LavaFun.*;
 
 public class RexTest {
 
@@ -18,7 +19,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex((LavaRunnable) () -> raise(originalException)).run();
+      rex(runnable(() -> raise(originalException))).run();
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -30,8 +31,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex((LavaConsumer) x -> raise(originalException)).accept("x");
-
+      rex(consumer(x -> raise(originalException))).accept("x");
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
     }
@@ -42,7 +42,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex((LavaBiConsumer) (x, y) -> raise(originalException)).accept("x", "y");
+      rex(biConsumer((x, y) -> raise(originalException))).accept("x", "y");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -54,7 +54,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex((LavaSupplier) () -> raise(originalException)).get();
+      rex(supplier(() -> raise(originalException))).get();
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -66,7 +66,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex((LavaFunction) x -> raise(originalException)).apply("x");
+      rex(function(x -> raise(originalException))).apply("x");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -78,7 +78,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex((LavaBiFunction) (x, y) -> raise(originalException)).apply("x", "y");
+      rex(biFunction((x, y) -> raise(originalException))).apply("x", "y");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -90,7 +90,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex((LavaPredicate) x -> raise(originalException)).test("x");
+      rex(predicate(x -> raise(originalException))).test("x");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -102,7 +102,7 @@ public class RexTest {
     final Exception originalException = new RuntimeException();
 
     try {
-      rex((LavaBiPredicate) (x, y) -> raise(originalException)).test("x", "y");
+      rex(biPredicate((x, y) -> raise(originalException))).test("x", "y");
 
     } catch (Exception e) {
       assertThat(e).isSameAs(originalException);
@@ -114,11 +114,11 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex((LavaRunnable) () -> raise(originalException)).run();
+      rex(runnable(() -> raise(originalException))).run();
 
     } catch (Exception e) {
       assertThat(e)
-          .isInstanceOf(RuntimeException.class)
+          .isInstanceOf(WrappedCheckedException.class)
           .hasCause(originalException);
     }
   }
@@ -128,11 +128,11 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex((LavaConsumer) x -> raise(originalException)).accept("x");
+      rex(consumer(x -> raise(originalException))).accept("x");
 
     } catch (Exception e) {
       assertThat(e)
-          .isInstanceOf(RuntimeException.class)
+          .isInstanceOf(WrappedCheckedException.class)
           .hasCause(originalException);
     }
   }
@@ -142,11 +142,11 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex((LavaBiConsumer) (x, y) -> raise(originalException)).accept("x", "y");
+      rex(biConsumer((x, y) -> raise(originalException))).accept("x", "y");
 
     } catch (Exception e) {
       assertThat(e)
-          .isInstanceOf(RuntimeException.class)
+          .isInstanceOf(WrappedCheckedException.class)
           .hasCause(originalException);
     }
   }
@@ -156,11 +156,11 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex((LavaSupplier) () -> raise(originalException)).get();
+      rex(supplier(() -> raise(originalException))).get();
 
     } catch (Exception e) {
       assertThat(e)
-          .isInstanceOf(RuntimeException.class)
+          .isInstanceOf(WrappedCheckedException.class)
           .hasCause(originalException);
     }
   }
@@ -170,11 +170,11 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex((LavaFunction) x -> raise(originalException)).apply("x");
+      rex(function(x -> raise(originalException))).apply("x");
 
     } catch (Exception e) {
       assertThat(e)
-          .isInstanceOf(RuntimeException.class)
+          .isInstanceOf(WrappedCheckedException.class)
           .hasCause(originalException);
     }
   }
@@ -184,11 +184,11 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex((LavaBiFunction) (x, y) -> raise(originalException)).apply("x", "y");
+      rex(biFunction((x, y) -> raise(originalException))).apply("x", "y");
 
     } catch (Exception e) {
       assertThat(e)
-          .isInstanceOf(RuntimeException.class)
+          .isInstanceOf(WrappedCheckedException.class)
           .hasCause(originalException);
     }
   }
@@ -198,11 +198,11 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex((LavaPredicate) x -> raise(originalException)).test("x");
+      rex(predicate(x -> raise(originalException))).test("x");
 
     } catch (Exception e) {
       assertThat(e)
-          .isInstanceOf(RuntimeException.class)
+          .isInstanceOf(WrappedCheckedException.class)
           .hasCause(originalException);
     }
   }
@@ -212,11 +212,11 @@ public class RexTest {
     final Exception originalException = new Exception();
 
     try {
-      rex((LavaBiPredicate) (x, y) -> raise(originalException)).test("x", "y");
+      rex(biPredicate((x, y) -> raise(originalException))).test("x", "y");
 
     } catch (Exception e) {
       assertThat(e)
-          .isInstanceOf(RuntimeException.class)
+          .isInstanceOf(WrappedCheckedException.class)
           .hasCause(originalException);
     }
   }

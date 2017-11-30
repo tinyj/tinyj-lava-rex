@@ -27,11 +27,9 @@
             </goals>
             <configuration>
               <excludes>
-                <exclude>module-info.java</exclude>
+                <exclude>src/main/java/module-info.java</exclude>
+                <release>8</release>
               </excludes>
-              <release>8</release>
-              <source>8</source>
-              <target>8</target>
             </configuration>
           </execution>
         </executions>
